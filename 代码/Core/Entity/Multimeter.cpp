@@ -22,7 +22,7 @@ void Multimeter::Init()
     m_filter[2].SetTau(0.004f);
 
     m_filter[3].SetUpdatePeriod(1);
-    m_filter[3].SetTau(0.0075f);
+    m_filter[3].SetTau(0.0005f);
 
     m_filter[4].SetUpdatePeriod(1);
     m_filter[4].SetTau(0.01f);

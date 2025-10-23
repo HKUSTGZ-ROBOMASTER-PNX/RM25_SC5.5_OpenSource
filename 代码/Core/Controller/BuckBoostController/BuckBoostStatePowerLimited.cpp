@@ -7,11 +7,11 @@ BuckBoostStatePowerLimited* debug;
 void BuckBoostStatePowerLimited::Init(BuckBoostController* pOwner)
 {
 	debug = this;
-	pidPower.kp = 0.42f;
-    pidPower.ki = 0.00005f;
+	pidPower.kp = 0.52f;
+    pidPower.ki = 0.00006f;
     pidPower.kd = 0.05f;
-    pidPower.maxOut = 15.0f;
-    pidPower.maxIOut = 0.5f;
+    pidPower.maxOut = 40.0f;
+    pidPower.maxIOut = 0.8f;
 }
 
 uint8_t over_current_count = 0;

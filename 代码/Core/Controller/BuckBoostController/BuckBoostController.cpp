@@ -5,7 +5,7 @@
 #include "stm32g4xx_ll_tim.h"
 #include "stm32g4xx_ll_adc.h"
 
-float BuckBoostController::m_max_voltage_set = 25.18f;
+float BuckBoostController::m_max_voltage_set = 23.0f;
 float BuckBoostController::m_re_max_voltage_set = 1.0f;
 float BuckBoostController::m_min_voltage_set = 2.5f;
 
@@ -45,11 +45,11 @@ void BuckBoostController::Init()
 	min_pwm_set = 12500;
 }
 
-bool debug_flag = true;
+bool debug_flag = false;
 bool restart_flag = false;
 
 static int controller_count = 0;
-static int max_delta = 20;
+static int max_delta = 40;
 int debug_pwm_set = 29000;
 static uint32_t no_battery_switch_off_keep_count = 0;
 
@@ -64,7 +64,7 @@ void BuckBoostController::Update()
 
 	if (controller_count % 3300)
 	{
-		supercap_fdb_packet.m_send_flag = true;
+		//supercap_fdb_packet.m_send_flag = true;
 	}
 
 	if (in_voltage_wait_count > 0)
@@ -157,9 +157,9 @@ void BuckBoostController::Update()
 			m_pwm_set = m_last_pwm_set - max_delta;
 		}
 
-		if (m_pwm_set < 12500)
+		if (m_pwm_set < 16000)
 		{
-			m_pwm_set = 12500;
+			m_pwm_set = 16000;
 		}
 		else if (m_pwm_set > 29500)
 		{
