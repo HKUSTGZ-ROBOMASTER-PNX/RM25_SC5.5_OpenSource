@@ -38,7 +38,7 @@ void BuckBoostController::Init()
 
 	LL_TIM_EnableCounter(TIM8);
 
-	m_max_voltage_set = 25.08f;
+	m_max_voltage_set = 23.0f;
 	m_re_max_voltage_set = 1.0f / m_max_voltage_set;
 
 	max_pwm_set = 29000;
@@ -48,25 +48,13 @@ void BuckBoostController::Init()
 bool debug_flag = false;
 bool restart_flag = false;
 
-static int controller_count = 0;
-static int max_delta = 40;
+static float max_delta = 40.0f;
+
 int debug_pwm_set = 29000;
 static uint32_t no_battery_switch_off_keep_count = 0;
 
 void BuckBoostController::Update()
 {
-	controller_count++;
-
-	supercap_fdb_packet.cap_power = multimeter.GetOutPower();
-	supercap_fdb_packet.input_power = multimeter.GetInputPower();
-	supercap_fdb_packet.cap_state_fdb = (uint8_t)m_switch;
-	supercap_fdb_packet.cap_voltage = multimeter.GetOutVoltage();
-
-	if (controller_count % 3300)
-	{
-		//supercap_fdb_packet.m_send_flag = true;
-	}
-
 	if (in_voltage_wait_count > 0)
 	{
 		m_switch = BuckBoostSwitch::Off;
@@ -86,8 +74,10 @@ void BuckBoostController::Update()
 			no_battery_switch_off_keep_count--;
 		}
 
-		in_voltage = multimeter.m_in_voltage;
+		//in_voltage = multimeter.m_in_voltage;
 
+		in_voltage = 24.0f;
+		
 		if (in_voltage < 5.0f)
 		{
 			in_voltage = 5.0f;
@@ -101,7 +91,7 @@ void BuckBoostController::Update()
 		min_pwm_set = MaxVoltageSetToPWMSet(m_re_max_voltage_set);
 		max_pwm_set = MinVoltageSetToPWMSet(m_min_voltage_set);
 
-		NoBatteryCheck();
+		//NoBatteryCheck();
 	}
 
 	if (m_switch == BuckBoostSwitch::Off)
@@ -111,17 +101,6 @@ void BuckBoostController::Update()
 	}
 	else
 	{
-		m_max_power = supercap_set_packet.power_limit_set;
-
-		if (m_max_power < 10.0f)
-		{
-			m_max_power = 10.0f;
-		}
-		else if (m_max_power > 205.0f)
-		{
-			m_max_power = 205.0f;
-		}
-
 		if (debug_flag == true)
 		{
 			m_pwm_set = debug_pwm_set;
@@ -132,7 +111,6 @@ void BuckBoostController::Update()
 				 restart_flag = true;
 				 bsp_htrim_burst_on();
 			}
-	
 		}
 		else
 		{
@@ -157,16 +135,14 @@ void BuckBoostController::Update()
 			m_pwm_set = m_last_pwm_set - max_delta;
 		}
 
-		if (m_pwm_set < 16000)
+		if (m_pwm_set < 16000.0f)
 		{
-			m_pwm_set = 16000;
+			m_pwm_set = 16000.0f;
 		}
-		else if (m_pwm_set > 29500)
+		else if (m_pwm_set > 29500.0f)
 		{
-			m_pwm_set = 29500;
+			m_pwm_set = 29500.0f;
 		}
-
-		//supercap_fdb_packet.battery_consumption += multimeter.m_in_power * 0.00004f;
 
 		bsp_hrtim_set((int)m_pwm_set);
 
@@ -276,6 +252,11 @@ float BuckBoostController::MinVoltageSetToPWMSet(float voltage_set)
 float BuckBoostController::MaxVoltageSetToPWMSet(float re_voltage_set)
 {
 	return (14799.0f * in_voltage + 9174.0f) * re_voltage_set - 630.0f;
+}
+
+float BuckBoostController::DeltaVoltageToDeltaPWM(float _voltage)
+{
+	return (in_voltage * 28.9096f - 1358.82f)*_voltage;
 }
 
 void BuckBoostFsm::HandleInput()

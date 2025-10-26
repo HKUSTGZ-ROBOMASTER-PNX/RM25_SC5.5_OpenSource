@@ -58,11 +58,20 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     }
   }
 }
+uint32_t c1 = 0,c2 = 2;
+uint32_t delta = 0;
+uint64_t tim8_count = 0;
 
 extern "C" void TIM8_UP_IRQHandler(void)
 {
-  buckBoostController.Update();
-  LL_TIM_ClearFlag_UPDATE(TIM8);
+	c1 = TIM8->CNT;
+	buckBoostController.Update();
+	LL_TIM_ClearFlag_UPDATE(TIM8);
+	c2 = TIM8->CNT;
+	
+	tim8_count++;
+	
+	delta = c2-c1;
 }
 
 extern "C" void SysTick_Handler(void)
@@ -73,18 +82,26 @@ extern "C" void SysTick_Handler(void)
   }
 }
 
-uint32_t dma_count = 0;
+uint32_t dma1_count = 0;
 
 extern "C" void DMA1_Channel1_IRQHandler(void)
 {
-	dma_count++;
-  buckBoostController.multimeter.Calu();
+	dma1_count++;
+  buckBoostController.multimeter.ADC1Calu();
   LL_DMA_ClearFlag_TC1(DMA1);
 }
 
 extern "C" void DMA1_Channel2_IRQHandler(void)
 {
+  uint32_t dma2_count = 0;
+  buckBoostController.multimeter.ADC2Calu();
   LL_DMA_ClearFlag_TC2(DMA1);
+}
+
+extern "C" void DMA1_Channel3_IRQHandler(void)
+{
+  buckBoostController.multimeter.ADC3Calu();
+  LL_DMA_ClearFlag_TC3(DMA1);
 }
 
 /* USER CODE END 0 */

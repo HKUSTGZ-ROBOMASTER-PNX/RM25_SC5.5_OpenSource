@@ -134,6 +134,8 @@ public:
     float MinVoltageSetToPWMSet(float voltage_set);
     float MaxVoltageSetToPWMSet(float voltage_set);
 
+    float DeltaVoltageToDeltaPWM(float _voltage);
+
     void Init();
     void Update();
 };

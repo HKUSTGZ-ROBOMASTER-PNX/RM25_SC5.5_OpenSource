@@ -9,6 +9,12 @@ class BuckBoostStatePowerLimited : public State<BuckBoostController>
 {
 private:
     float m_power_set;
+    float m_cap_power_set;
+    float m_cap_voltage_diff;
+    float m_control_freq_reciprocal;
+    float m_capacitance_reciprocal;
+    float m_pwm_diff;
+
 public:
     Pid pidPower;
 

@@ -197,7 +197,6 @@ void bsp_hrtim_init(void)
   NVIC_EnableIRQ(HRTIM1_Master_IRQn);
 }
 
-
 const static uint32_t HTTimPer = 0x3E80;
 uint8_t burst_mode = 0;
 static uint32_t PWM_PER_0_5 = 0.5f * HTTimPer;
@@ -227,27 +226,12 @@ void bsp_htrim_burst_on(void)
   burst_mode = 1;
 }
 
-
 void bsp_hrtim_set(int set)
 {
-
-  // uint32_t	PWM_PER_0_5	= 0.5f * HTTimPer;
-
-  if (set > 1.80f * HTTimPer)
-  {
-    set = 1.80f * HTTimPer; //???????????
-  }
-
-  if (set < 0.1f * HTTimPer)
-  {
-    set = 0.1f * HTTimPer; //???????????
-  }
-
-  if (set > 0.95f * HTTimPer)                     // 15201 = 22.858 15200 = 22.935
-  {                                               //???????????90%???????BOOSTg???
-    boost_duty = set * 0.5f - 0.9f * PWM_PER_0_5; //????boost???????????g?????K???PWM?????????buck_duty??????: 0.8*PWM_PER_0_5
+  if (set > 0.95f * HTTimPer)                     
+  {                                               
+    boost_duty = set * 0.5f - 0.9f * PWM_PER_0_5;
     buck_duty = 0.90f * PWM_PER_0_5;
-    // buck_duty = 0.95f * PWM_PER_0_5; 		// 7600
 
     if (burst_mode == 1)
     {
@@ -270,10 +254,9 @@ void bsp_hrtim_set(int set)
       LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
     }
   }
-  else //
+  else 
   {
     buck_duty = set * 0.5f + 705; // 7600
-    // boost_duty = 0.05f * PWM_PER_0_5; //?????????????90%???????BUCKg?,boost_duty????????? 400
     boost_duty = 0.11f * PWM_PER_0_5;
 
     if (burst_mode == 1)
