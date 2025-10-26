@@ -45,7 +45,7 @@ void BuckBoostController::Init()
 	min_pwm_set = 12500;
 }
 
-bool debug_flag = false;
+bool debug_flag = true;
 bool restart_flag = false;
 
 static float max_delta = 40.0f;
