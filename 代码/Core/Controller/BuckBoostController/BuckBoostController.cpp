@@ -32,17 +32,19 @@ void BuckBoostController::Init()
 
 	buckBoostFsm.Init();
 
-	m_last_pwm_set = m_pwm_set = 29000;
+	m_last_pwm_set = m_pwm_set = 1000;
+
+	last_burst_mode = burst_mode = 0;
 
 	m_switch = BuckBoostSwitch::Off;
 
 	LL_TIM_EnableCounter(TIM8);
 
-	m_max_voltage_set = 23.0f;
-	m_re_max_voltage_set = 1.0f / m_max_voltage_set;
+	// m_max_voltage_set = 23.0f;
+	// m_re_max_voltage_set = 1.0f / m_max_voltage_set;
 
-	max_pwm_set = 29000;
-	min_pwm_set = 12500;
+	max_pwm_set = 15000;
+	min_pwm_set = 1000;
 }
 
 bool debug_flag = true;
@@ -50,7 +52,7 @@ bool restart_flag = false;
 
 static float max_delta = 40.0f;
 
-int debug_pwm_set = 29000;
+int debug_pwm_set = 1000;
 static uint32_t no_battery_switch_off_keep_count = 0;
 
 void BuckBoostController::Update()
@@ -74,10 +76,10 @@ void BuckBoostController::Update()
 			no_battery_switch_off_keep_count--;
 		}
 
-		//in_voltage = multimeter.m_in_voltage;
+		// in_voltage = multimeter.m_in_voltage;
 
 		in_voltage = 24.0f;
-		
+
 		if (in_voltage < 5.0f)
 		{
 			in_voltage = 5.0f;
@@ -88,10 +90,10 @@ void BuckBoostController::Update()
 			in_voltage = 30.0f;
 		}
 
-		min_pwm_set = MaxVoltageSetToPWMSet(m_re_max_voltage_set);
-		max_pwm_set = MinVoltageSetToPWMSet(m_min_voltage_set);
+		// min_pwm_set = MaxVoltageSetToPWMSet(m_re_max_voltage_set);
+		// max_pwm_set = MinVoltageSetToPWMSet(m_min_voltage_set);
 
-		//NoBatteryCheck();
+		// NoBatteryCheck();
 	}
 
 	if (m_switch == BuckBoostSwitch::Off)
@@ -105,11 +107,11 @@ void BuckBoostController::Update()
 		{
 			m_pwm_set = debug_pwm_set;
 			bsp_hrtim_on();
-			
-			if(restart_flag == false)
+
+			if (restart_flag == false)
 			{
-				 restart_flag = true;
-				 bsp_htrim_burst_on();
+				restart_flag = true;
+				bsp_hrtim_burst_on();
 			}
 		}
 		else
@@ -135,13 +137,36 @@ void BuckBoostController::Update()
 			m_pwm_set = m_last_pwm_set - max_delta;
 		}
 
-		if (m_pwm_set < 16000.0f)
+		// if (m_pwm_set < 16000.0f)
+		// {
+		// 	m_pwm_set = 16000.0f;
+		// }
+		// else if (m_pwm_set > 29500.0f)
+		// {
+		// 	m_pwm_set = 29500.0f;
+		// }
+
+		if (m_pwm_set<15392.4f)
 		{
-			m_pwm_set = 16000.0f;
+			burst_mode = 0;
 		}
-		else if (m_pwm_set > 29500.0f)
+		else if (m_pwm_set >= 15392.4f && m_pwm_set < 16000.0f)
 		{
-			m_pwm_set = 29500.0f;
+			burst_mode = 1;
+		}
+		else if (m_pwm_set >= 16000.0f && m_pwm_set < 16631.6f)
+		{
+			burst_mode = 2;
+		}
+		else if (m_pwm_set >= 16631.6f)
+		{
+			burst_mode = 3;
+		}
+
+		if (last_burst_mode != burst_mode)
+		{
+			last_burst_mode = burst_mode;
+			bsp_set_hrtim_mode(burst_mode);
 		}
 
 		bsp_hrtim_set((int)m_pwm_set);
@@ -256,7 +281,7 @@ float BuckBoostController::MaxVoltageSetToPWMSet(float re_voltage_set)
 
 float BuckBoostController::DeltaVoltageToDeltaPWM(float _voltage)
 {
-	return (in_voltage * 28.9096f - 1358.82f)*_voltage;
+	return (in_voltage * 28.9096f - 1358.82f) * _voltage;
 }
 
 void BuckBoostFsm::HandleInput()

@@ -15,7 +15,9 @@ void bsp_hrtim_init(void);
 void bsp_hrtim_set(int);
 void bsp_hrtim_on(void);
 void bsp_hrtim_off(void);
-void bsp_htrim_burst_on(void);
+void bsp_hrtim_burst_on(void);
+
+void bsp_set_hrtim_mode(uint8_t mode);
 	
 #ifdef __cplusplus
 }

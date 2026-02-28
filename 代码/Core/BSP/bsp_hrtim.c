@@ -64,7 +64,7 @@ void bsp_hrtim_init(void)
   }
 
   LL_HRTIM_TIM_SetCompare1(HRTIM1, LL_HRTIM_TIMER_MASTER, 0x3E80);
-  LL_HRTIM_TIM_SetPrescaler(HRTIM1, LL_HRTIM_TIMER_A, LL_HRTIM_PRESCALERRATIO_MUL16); 
+  LL_HRTIM_TIM_SetPrescaler(HRTIM1, LL_HRTIM_TIMER_A, LL_HRTIM_PRESCALERRATIO_MUL16);
   LL_HRTIM_TIM_SetCounterMode(HRTIM1, LL_HRTIM_TIMER_A, LL_HRTIM_MODE_CONTINUOUS);
   LL_HRTIM_TIM_SetPeriod(HRTIM1, LL_HRTIM_TIMER_A, 0x3E80);
   LL_HRTIM_TIM_SetRepetition(HRTIM1, LL_HRTIM_TIMER_A, 0x00);
@@ -85,7 +85,7 @@ void bsp_hrtim_init(void)
   LL_HRTIM_TIM_DisableResyncUpdate(HRTIM1, LL_HRTIM_TIMER_A);
 
   LL_HRTIM_OUT_SetPolarity(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_POSITIVE_POLARITY);
-  LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE); 
+  LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
   LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_IDLELEVEL_INACTIVE);
   LL_HRTIM_OUT_SetFaultState(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_FAULTSTATE_NO_ACTION);
   LL_HRTIM_OUT_SetChopperMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_CHOPPERMODE_DISABLED);
@@ -94,7 +94,7 @@ void bsp_hrtim_init(void)
   LL_HRTIM_OUT_SetBMEntryMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_BM_ENTRYMODE_DELAYED);
 
   LL_HRTIM_OUT_SetPolarity(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_POSITIVE_POLARITY);
-  LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE); 
+  LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
   LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_IDLELEVEL_INACTIVE);
   LL_HRTIM_OUT_SetFaultState(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_FAULTSTATE_NO_ACTION);
   LL_HRTIM_OUT_SetChopperMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_CHOPPERMODE_DISABLED);
@@ -192,7 +192,7 @@ void bsp_hrtim_init(void)
   LL_TIM_EnableCounter(TIM1);
 
   bsp_hrtim_set(26470);
-  
+
   NVIC_SetPriority(HRTIM1_Master_IRQn, 0);
   NVIC_EnableIRQ(HRTIM1_Master_IRQn);
 }
@@ -203,23 +203,23 @@ static uint32_t PWM_PER_0_5 = 0.5f * HTTimPer;
 uint32_t buck_duty, boost_duty;
 uint32_t debug_boost_set = 100;
 
-void bsp_htrim_burst_on(void)
+void bsp_hrtim_burst_on(void)
 {
-	LL_HRTIM_TIM_CounterDisable(HRTIM1, LL_HRTIM_TIMER_A);
+  LL_HRTIM_TIM_CounterDisable(HRTIM1, LL_HRTIM_TIMER_A);
   LL_HRTIM_TIM_CounterDisable(HRTIM1, LL_HRTIM_TIMER_C);
   LL_HRTIM_TIM_CounterDisable(HRTIM1, LL_HRTIM_TIMER_MASTER);
-	
+
   LL_HRTIM_BM_SetPeriod(HRTIM1, 4 - 1);
   LL_HRTIM_BM_SetCompare(HRTIM1, 3 - 1);
   LL_HRTIM_BM_SetMode(HRTIM1, LL_HRTIM_BM_MODE_CONTINOUS);
-  LL_HRTIM_BM_SetClockSrc(HRTIM1,LL_HRTIM_BM_CLKSRC_MASTER);
-  LL_HRTIM_BM_SetTrig(HRTIM1,LL_HRTIM_BM_TRIG_MASTER_RESET);
+  LL_HRTIM_BM_SetClockSrc(HRTIM1, LL_HRTIM_BM_CLKSRC_MASTER);
+  LL_HRTIM_BM_SetTrig(HRTIM1, LL_HRTIM_BM_TRIG_MASTER_RESET);
   LL_HRTIM_BM_Enable(HRTIM1);
 
-	LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_IDLELEVEL_ACTIVE);
-	LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_IDLELEVEL_ACTIVE);
-	
-	LL_HRTIM_TIM_CounterEnable(HRTIM1, LL_HRTIM_TIMER_A);
+  LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_IDLELEVEL_ACTIVE);
+  LL_HRTIM_OUT_SetIdleLevel(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_IDLELEVEL_ACTIVE);
+
+  LL_HRTIM_TIM_CounterEnable(HRTIM1, LL_HRTIM_TIMER_A);
   LL_HRTIM_TIM_CounterEnable(HRTIM1, LL_HRTIM_TIMER_C);
   LL_HRTIM_TIM_CounterEnable(HRTIM1, LL_HRTIM_TIMER_MASTER);
 
@@ -228,51 +228,96 @@ void bsp_htrim_burst_on(void)
 
 void bsp_hrtim_set(int set)
 {
-  if (set > 0.95f * HTTimPer)                     
-  {                                               
-    boost_duty = set * 0.5f - 0.9f * PWM_PER_0_5;
-    buck_duty = 0.90f * PWM_PER_0_5;
-
-    if (burst_mode == 1)
-    {
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_IDLE_WHEN_BURST);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_IDLE_WHEN_BURST);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
-    }
-  }
-  else if (set <= 0.95f * HTTimPer && set > 0.9f * HTTimPer) // 14400, 14401 = 24.104
+  if (set < 15392.4f)
   {
-    buck_duty = set * 0.5f + 126; // 7600
-    boost_duty = 0.08f * PWM_PER_0_5;
-
-    if (burst_mode == 1)
-    {
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
-    }
+    buck_duty = set * -0.493553f + 7996.96f;
+    boost_duty = 0.95f * PWM_PER_0_5;
   }
-  else 
+  else if (set >= 15392.4f && set < 16000.0f)
   {
-    buck_duty = set * 0.5f + 705; // 7600
-    boost_duty = 0.11f * PWM_PER_0_5;
-
-    if (burst_mode == 1)
-    {
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_IDLE_WHEN_BURST);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_IDLE_WHEN_BURST);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
-      LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
-    }
+    buck_duty = set * -0.475313f + 8005.0f;
+    boost_duty = 0.95f * PWM_PER_0_5;
+  }
+  else if (set >= 16000.0f && set < 16631.6f)
+  {
+    buck_duty = 0.05f * PWM_PER_0_5;
+    boost_duty = -0.457251 * set + 14916.0f;
+  }
+  else if (set >= 16631.6f)
+  {
+    buck_duty = 0.05f * PWM_PER_0_5;
+    boost_duty = -0.40915f * set + 14285.1f;
   }
 
-  LL_HRTIM_TIM_SetCompare1(HRTIM1, LL_HRTIM_TIMER_A, PWM_PER_0_5 + buck_duty);
-  LL_HRTIM_TIM_SetCompare4(HRTIM1, LL_HRTIM_TIMER_A, PWM_PER_0_5 - buck_duty);
+  // if (set > 0.95f * HTTimPer)
+  // {
+  // }
+  // else if (set <= 0.95f * HTTimPer && set > 0.9f * HTTimPer) // 14400, 14401 = 24.104
+  // {
+  //   boost_duty = set * 0.5f + 126; // 7600
+  //   buck_duty = 0.08f * PWM_PER_0_5;
 
-  LL_HRTIM_TIM_SetCompare2(HRTIM1, LL_HRTIM_TIMER_C, PWM_PER_0_5 - boost_duty);
-  LL_HRTIM_TIM_SetCompare3(HRTIM1, LL_HRTIM_TIMER_C, PWM_PER_0_5 + boost_duty);
+  //   if (burst_mode == 1)
+  //   {
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
+  //   }
+  // }
+  // else
+  // {
+  //   boost_duty = set * 0.5f + 705; // 7600
+  //   buck_duty = 0.11f * PWM_PER_0_5;
+
+  //   if (burst_mode == 1)
+  //   {
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
+  //     LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
+  //   }
+  // }
+
+  LL_HRTIM_TIM_SetCompare1(HRTIM1, LL_HRTIM_TIMER_A, PWM_PER_0_5 + boost_duty);
+  LL_HRTIM_TIM_SetCompare4(HRTIM1, LL_HRTIM_TIMER_A, PWM_PER_0_5 - boost_duty);
+
+  LL_HRTIM_TIM_SetCompare2(HRTIM1, LL_HRTIM_TIMER_C, PWM_PER_0_5 - buck_duty);
+  LL_HRTIM_TIM_SetCompare3(HRTIM1, LL_HRTIM_TIMER_C, PWM_PER_0_5 + buck_duty);
+}
+
+void bsp_set_hrtim_mode(uint8_t mode)
+{
+  switch (mode)
+  {
+  case 0:
+
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
+    break;
+  case 1:
+  case 2:
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
+    break;
+  case 3:
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_IDLE_WHEN_BURST);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
+    break;
+  default:
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TA2, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC1, LL_HRTIM_OUT_NO_IDLE);
+    LL_HRTIM_OUT_SetIdleMode(HRTIM1, LL_HRTIM_OUTPUT_TC2, LL_HRTIM_OUT_NO_IDLE);
+    break;
+  }
+  burst_mode = mode;
 }
 
 void bsp_hrtim_on(void)
@@ -286,8 +331,6 @@ void bsp_hrtim_off(void)
   LL_HRTIM_DisableOutput(HRTIM1, LL_HRTIM_OUTPUT_TA1 | LL_HRTIM_OUTPUT_TA2);
   LL_HRTIM_DisableOutput(HRTIM1, LL_HRTIM_OUTPUT_TC1 | LL_HRTIM_OUTPUT_TC2);
 }
-
-uint64_t boot_count = 0;
 
 void HRTIM1_Master_IRQHandler(void)
 {

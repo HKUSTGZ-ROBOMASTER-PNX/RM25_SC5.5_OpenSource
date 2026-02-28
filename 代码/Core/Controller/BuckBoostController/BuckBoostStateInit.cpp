@@ -50,7 +50,7 @@ void BuckBoostStateInit::Execute(BuckBoostController* pOwner)
 			if(init_restart_flag == false)
 			{
 				 init_restart_flag = true;
-				 bsp_htrim_burst_on();
+				 bsp_hrtim_burst_on();
 			}
 		
 		pOwner->buckBoostFsm.ChangeState(BuckBoostStatePowerLimited::Instance());

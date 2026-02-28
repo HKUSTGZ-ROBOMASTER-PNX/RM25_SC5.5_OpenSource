@@ -128,6 +128,8 @@ public:
     float m_last_pwm_set;
     float m_max_power;
     float m_max_current_set = 14.0f;
+    uint8_t last_burst_mode;
+    uint8_t burst_mode;
 
     BuckBoostSwitch m_switch;
 
