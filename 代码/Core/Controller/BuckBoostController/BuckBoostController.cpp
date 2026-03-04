@@ -32,7 +32,7 @@ void BuckBoostController::Init()
 
 	buckBoostFsm.Init();
 
-	m_last_pwm_set = m_pwm_set = 1000;
+	m_last_pwm_set = m_pwm_set = 2000;
 
 	last_burst_mode = burst_mode = 0;
 
@@ -43,7 +43,7 @@ void BuckBoostController::Init()
 	// m_max_voltage_set = 23.0f;
 	// m_re_max_voltage_set = 1.0f / m_max_voltage_set;
 
-	max_pwm_set = 15000;
+	max_pwm_set = 18000;
 	min_pwm_set = 1000;
 }
 
@@ -52,7 +52,7 @@ bool restart_flag = false;
 
 static float max_delta = 40.0f;
 
-int debug_pwm_set = 1000;
+int debug_pwm_set = 2000;
 static uint32_t no_battery_switch_off_keep_count = 0;
 
 void BuckBoostController::Update()
@@ -112,6 +112,8 @@ void BuckBoostController::Update()
 			{
 				restart_flag = true;
 				bsp_hrtim_burst_on();
+				burst_mode = 0;
+				bsp_set_hrtim_mode(burst_mode);
 			}
 		}
 		else
@@ -146,22 +148,42 @@ void BuckBoostController::Update()
 		// 	m_pwm_set = 29500.0f;
 		// }
 
-		if (m_pwm_set<15392.4f)
+		if (m_pwm_set < 14694.0f)
 		{
 			burst_mode = 0;
 		}
-		else if (m_pwm_set >= 15392.4f && m_pwm_set < 16000.0f)
+		else if (m_pwm_set >= 14694.0f && m_pwm_set < 16000.0f)
 		{
 			burst_mode = 1;
 		}
-		else if (m_pwm_set >= 16000.0f && m_pwm_set < 16631.6f)
+		else if (m_pwm_set >= 16000.0f && m_pwm_set < 17422.0f)
 		{
 			burst_mode = 2;
 		}
-		else if (m_pwm_set >= 16631.6f)
+		else if (m_pwm_set >= 17422.0f)
 		{
 			burst_mode = 3;
 		}
+
+		/*
+
+		if (m_pwm_set<14694.0f)
+		{
+			burst_mode = 0;
+		}
+		else if (m_pwm_set >= 14694.0f && m_pwm_set < 16000.0f)
+		{
+			burst_mode = 1;
+		}
+		else if (m_pwm_set >= 16000.0f && m_pwm_set < 17422.0f)
+		{
+			burst_mode = 2;
+		}
+		else if (m_pwm_set >= 17422.0f)
+		{
+			burst_mode = 3;
+		}
+		*/
 
 		if (last_burst_mode != burst_mode)
 		{
